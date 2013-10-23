@@ -6,11 +6,13 @@
 require 'rubygems'
 require 'json'
 require 'net/http'
+require 'haml'
 
 GITHUB_USER = 'alicraigmile'
 MAX_REPOS_TO_SHOW = 5 # maximum number of repos to show
 SORT_BY = 'pushed_at' # one of pushed_at, created_at, updated_at
 GITHUB_PREFIX = 'https://github.com/' # URL to use in the 'more like this' like
+HTML_TEMPLATE = 'repos.html.haml'
 
 def get_repos(username)
   url = "https://api.github.com/users/#{username}/repos"
@@ -39,22 +41,16 @@ end
 github_user = GITHUB_USER
 repos = mock_get_repos(github_user)
 
-puts "<div id=\"github-repos\">"
-
+# get some nice data ready for the template
 available = repos.count()
 showing = available >= MAX_REPOS_TO_SHOW ? MAX_REPOS_TO_SHOW : available
-puts "<p>Showing #{showing} of #{available.to_s()} repos.</p>"
+show = repos.sort {|a,b| b[SORT_BY] <=> a[SORT_BY]}.take(showing)
+github_url = "#{GITHUB_PREFIX}#{github_user}"
+display_url = "#{GITHUB_PREFIX}#{github_user}".gsub( /https?:\/\//, '' )
 
-puts "<ul>"
-repos.sort {|a,b| b[SORT_BY] <=> a[SORT_BY]}.take(showing).each do |repo|
-  fmt = '<li><a href="%s">%s</a> – %s</li>'
-  puts fmt % [repo['html_url'], repo['full_name'], repo['description']]
-end
-puts "</ul>"
+# bundle them all into a managable object to pass to haml
+vars = {:available => available, :showing => showing, :show => show, :github_url => github_url, :display_url => display_url};
 
-if (showing < available)
-  display_url = "#{GITHUB_PREFIX}#{github_user}".gsub( /https?:\/\//, '' )
-  puts "<p>For more like this visit <a href=\"{#GITHUB_PREFIX}#{github_user}\">#{display_url}</a>.</p>"
-end
-
-puts "</div>"
+# render it
+engine = Haml::Engine.new(File.read(HTML_TEMPLATE),{:format => :html5})
+puts engine.render(Object.new, vars)

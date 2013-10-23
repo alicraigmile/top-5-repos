@@ -1,0 +1,20 @@
+-#coding:utf-8
+%html
+  %head
+    %meta{:charset => 'utf-8'}
+  %body
+    %div#github-repos
+      %p
+        Showing #{showing} of #{available.to_s()} repos.
+      %ul
+        -show.each do |repo|
+          %li
+            %a{:href => repo['html_url']}
+              =repo['full_name']
+            – 
+            =repo['description']
+      -if (showing < available)
+        %p
+          For more like this visit
+          %a{:href => github_url}
+            =display_url
