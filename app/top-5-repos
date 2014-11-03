@@ -41,20 +41,28 @@ def mock_get_repos(username)
   return result
 end
 
-github_user = GITHUB_USER
-#repos = mock_get_repos(github_user)
-repos = get_repos(github_user)
 
-# get some nice data ready for the template
-available = repos.count()
-showing = available >= MAX_REPOS_TO_SHOW ? MAX_REPOS_TO_SHOW : available
-show = repos.sort {|a,b| b[SORT_BY] <=> a[SORT_BY]}.take(showing)
-github_url = "#{GITHUB_PREFIX}#{github_user}"
-display_url = "#{GITHUB_PREFIX}#{github_user}".gsub( /https?:\/\//, '' )
+if ARGV.empty?
+  puts"\n\nUsage: github-repos <username>\n"
+else 
 
-# bundle them all into a managable object to pass to haml
-vars = {:available => available, :showing => showing, :show => show, :github_url => github_url, :display_url => display_url};
+  github_user = ARGV[0]
 
-# render it
-engine = Haml::Engine.new(File.read(HTML_TEMPLATE),{:format => :html5})
-puts engine.render(Object.new, vars)
+  #repos = mock_get_repos(github_user)
+  repos = get_repos(github_user)
+
+  # get some nice data ready for the template
+  available = repos.count()
+  showing = available >= MAX_REPOS_TO_SHOW ? MAX_REPOS_TO_SHOW : available
+  show = repos.sort {|a,b| b[SORT_BY] <=> a[SORT_BY]}.take(showing)
+  github_url = "#{GITHUB_PREFIX}#{github_user}"
+  display_url = "#{GITHUB_PREFIX}#{github_user}".gsub( /https?:\/\//, '' )
+
+  # bundle them all into a managable object to pass to haml
+  vars = {:available => available, :showing => showing, :show => show, :github_url => github_url, :display_url => display_url};
+
+  # render it
+  engine = Haml::Engine.new(File.read(HTML_TEMPLATE),{:format => :html5})
+  puts engine.render(Object.new, vars)
+
+end

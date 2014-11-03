@@ -1,6 +1,6 @@
 #output the list of repos as a webpage
 bundle install
-./app/repos.rb > repos.html
+./app/github-repos > repos.html
 
 #open in a browser (MacOS)
 open repos.html
