@@ -1,13 +1,5 @@
-#output the list of repos as a webpage
-bundle install
-./app/github-repos > repos.html
+output the list of repos as a webpage
 
-#open in a browser (MacOS)
-open repos.html
-
-#open in a browser (GNOME desktop)
-gtk-open repos.html
-
-#open in a browser (GNOME windows)
-start repos.html
+  bundle install
+  ./app/top-5-repos > repos.html
 

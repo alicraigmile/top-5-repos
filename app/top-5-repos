@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-# repos.rb Include your top github repos on your website
+# top-5-repos -  Display the top 5 github repos for any user
 # (c) Ali Craigmile <ali@craigmile.com>
 
 $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/..")
@@ -10,7 +10,6 @@ require 'json'
 require 'net/http'
 require 'haml'
 
-GITHUB_USER = 'alicraigmile'
 MAX_REPOS_TO_SHOW = 5 # maximum number of repos to show
 SORT_BY = 'pushed_at' # one of pushed_at, created_at, updated_at
 GITHUB_PREFIX = 'https://github.com/' # URL to use in the 'more like this' like
