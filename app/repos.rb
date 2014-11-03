@@ -3,6 +3,8 @@
 # repos.rb Include your top github repos on your website
 # (c) Ali Craigmile <ali@craigmile.com>
 
+$LOAD_PATH.unshift("#{File.dirname(__FILE__)}/..")
+require 'bundler/setup'
 require 'rubygems'
 require 'json'
 require 'net/http'
@@ -12,7 +14,8 @@ GITHUB_USER = 'alicraigmile'
 MAX_REPOS_TO_SHOW = 5 # maximum number of repos to show
 SORT_BY = 'pushed_at' # one of pushed_at, created_at, updated_at
 GITHUB_PREFIX = 'https://github.com/' # URL to use in the 'more like this' like
-HTML_TEMPLATE = '../templates/repos.html.haml'
+HTML_TEMPLATE = "#{File.dirname(__FILE__)}/../templates/repos.html.haml"
+MOCK_FILENAME = "#{File.dirname(__FILE__)}/../mock/mock_repos.json"
 
 def get_repos(username)
   url = "https://api.github.com/users/#{username}/repos"
@@ -23,16 +26,16 @@ def get_repos(username)
   # data structure - a hash
   result = JSON.parse(data)
 
+
   # if the hash has 'Error' as a key, we raise an error
-  if result.has_key? 'Error'
+  if (! result.kind_of?(Array)) && (result.has_key? 'Error')
     raise "web service error"
   end
   return result
 end
 
 def mock_get_repos(username)
-  filename = "mock_repos.json"
-  data = File.read(filename)
+  data = File.read(MOCK_FILENAME)
 
   result = JSON.parse(data)
   return result
