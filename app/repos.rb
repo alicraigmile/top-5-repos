@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # repos.rb Include your top github repos on your website
-# by Ali Craigmile <ali@craigmile.com>
+# (c) Ali Craigmile <ali@craigmile.com>
 
 require 'rubygems'
 require 'json'
@@ -12,7 +12,7 @@ GITHUB_USER = 'alicraigmile'
 MAX_REPOS_TO_SHOW = 5 # maximum number of repos to show
 SORT_BY = 'pushed_at' # one of pushed_at, created_at, updated_at
 GITHUB_PREFIX = 'https://github.com/' # URL to use in the 'more like this' like
-HTML_TEMPLATE = 'repos.html.haml'
+HTML_TEMPLATE = '../templates/repos.html.haml'
 
 def get_repos(username)
   url = "https://api.github.com/users/#{username}/repos"
@@ -39,7 +39,8 @@ def mock_get_repos(username)
 end
 
 github_user = GITHUB_USER
-repos = mock_get_repos(github_user)
+#repos = mock_get_repos(github_user)
+repos = get_repos(github_user)
 
 # get some nice data ready for the template
 available = repos.count()
